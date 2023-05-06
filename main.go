@@ -20,6 +20,9 @@ func main() {
 		if strings.Contains(domain, "https://") {
 			domain = strings.Replace(domain, "https://", "", -1)
 		}
+		if strings.Contains(domain, "www.") {
+			domain = strings.Replace(domain, "www.", "", -1)
+		}
 		checkDomain(domain)
 		fmt.Print("\n\nEnter domain: ")
 	}
@@ -33,6 +36,7 @@ func checkDomain(domain string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("\nIP Addresses:")
 	for _, ip := range ips {
 		fmt.Println(ip)
 	}
@@ -41,8 +45,8 @@ func checkDomain(domain string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("\nMX Records:")
 	for _, MX := range MXs {
-		fmt.Println("MX Records:\n")
 		fmt.Println(MX.Host)
 	}
 
@@ -50,10 +54,11 @@ func checkDomain(domain string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("\nSPF Records:")
 	for _, TXT := range TXTs {
-		fmt.Println("SPF Records:\n")
 		if strings.Contains(TXT, "v=spf1") {
 			fmt.Println(TXT)
+			break;
 		}
 	}
 
@@ -61,11 +66,21 @@ func checkDomain(domain string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("\nNS Records:")
 	for _, NS := range NSs {
-		fmt.Println("NS Records:\n")
 		fmt.Println(NS.Host)
 	}
 
-	
+	dmarc, err := net.LookupTXT("_dmarc." + domain)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("\nDMARC Record:")
+	for _, dmarc := range dmarc {
+		if strings.Contains(dmarc, "v=DMARC1") {
+			fmt.Println(dmarc)
+			break
+		}
+	}
 
 }
