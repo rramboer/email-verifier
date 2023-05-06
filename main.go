@@ -58,7 +58,7 @@ func checkDomain(domain string) {
 	for _, TXT := range TXTs {
 		if strings.Contains(TXT, "v=spf1") {
 			fmt.Println(TXT)
-			break;
+			break
 		}
 	}
 
