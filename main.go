@@ -82,5 +82,4 @@ func checkDomain(domain string) {
 			break
 		}
 	}
-
 }
